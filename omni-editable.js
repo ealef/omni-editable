@@ -31,7 +31,7 @@
 					.insertAfter(editableSpan);
 			
 			parent.prepend(input)
-					.find("."+NORMAL_MODE_CLS)
+					.find("." + NORMAL_MODE_CLS)
 					.remove();			
 		};
 		
@@ -59,7 +59,6 @@
 		}
 		
 		function createSpan(editable, html) {
-			console.log(html);
 			return $("<span></span>")
 					.html(html)
 					.addClass([
