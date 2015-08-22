@@ -8,15 +8,11 @@
 		var EDIT_MODE_CLS = "editMode";
 		var NORMAL_MODE_CLS = "normalMode";
 		
+		
 		var startEdit = function() {
 			var clickedButton = $(this);
 			var parent = clickedButton.parent();
-			var editableSpan = parent.find("." + EDITABLE_SPAN_CLS);
-			var input = $("<input type = 'text'/>")
-					.attr("class", parent.attr("class"))
-					.addClass(TEXT_INPUT_CLS + " " + EDIT_MODE_CLS)
-					.val(editableSpan.text())
-					.prop("defaultValue",editableSpan.text());
+			var editableSpan = parent.find("." + EDITABLE_SPAN_CLS);			
 			var cancelButton = $("<button>Cancel</button>")
 					.text("Cancel")
 					.attr("type","button")
@@ -29,10 +25,17 @@
 					.addClass(OK_BTN_CLS + " " + EDIT_MODE_CLS)
 					.click(acceptEdit)
 					.insertAfter(editableSpan);
-			
-			parent.prepend(input)
-					.find("." + NORMAL_MODE_CLS)
-					.remove();			
+			var input = $("<input type = 'text'/>")
+					.attr("class", parent.attr("class"))
+					.addClass(TEXT_INPUT_CLS + " " + EDIT_MODE_CLS)
+					.val(editableSpan.text())
+					.prop("defaultValue", editableSpan.text())
+					.keyup(checkShortcuts)
+					.insertBefore(editableSpan)
+					.focus();
+							
+			parent.find("." + NORMAL_MODE_CLS)
+					.remove();
 		};
 		
 		var acceptEdit = function() {
@@ -46,6 +49,21 @@
 			var parent = clickedButton.parent();
 			revertEdit(parent,false);
 		};
+		
+		function checkShortcuts(event) {
+			var code = event.keyCode || event.which;
+			var parent = $(this).parent();
+			
+			console.log(code);
+			switch (code) {
+			case 13:	// ENTER
+				acceptEdit.call(parent.find("." + OK_BTN_CLS));
+				break;
+			case 27:	// ESC
+				cancelEdit.call(parent.find("." + CANCEL_BTN_CLS));
+				break;
+			}
+		}
 		
 		function revertEdit(editable, keepChanges) {
 			var spanHtml = keepChanges?
