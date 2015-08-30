@@ -1,4 +1,4 @@
-(function( $ ) {
+(function( $, console ) {
 	$.fn.omniEditable = function(options) {
 		var EDIT_BTN_CLS = "cancelButton";
 		var OK_BTN_CLS = "okButton";
@@ -17,29 +17,33 @@
 				options.onStartEdit(e, parent, editableSpan.html());
 			}
 			
-			var cancelButton = $("<button>Cancel</button>")
-					.text("Cancel")
-					.attr("type","button")
-					.click(cancelEdit)
-					.addClass(CANCEL_BTN_CLS + " " + EDIT_MODE_CLS)
-					.insertAfter(editableSpan);
-			var okButton = $("<button></button>")
-					.text("OK")
-					.attr("type","button")
-					.addClass(OK_BTN_CLS + " " + EDIT_MODE_CLS)
-					.click(acceptEdit)
-					.insertAfter(editableSpan);
-			var input = $("<input type = 'text'/>")
-					.attr("class", parent.attr("class"))
-					.addClass(TEXT_INPUT_CLS + " " + EDIT_MODE_CLS)
-					.val(editableSpan.text())
-					.prop("defaultValue", editableSpan.text())
-					.keyup(checkShortcuts)
-					.insertBefore(editableSpan)
-					.focus();
-						
-			parent.find("." + NORMAL_MODE_CLS)
-					.remove();
+			if (!e.isPropagationStopped()) {
+				var cancelButton = $("<button>Cancel</button>")
+						.text("Cancel")
+						.attr("type","button")
+						.click(cancelEdit)
+						.addClass(CANCEL_BTN_CLS + " " + EDIT_MODE_CLS)
+						.insertAfter(editableSpan);
+				var okButton = $("<button></button>")
+						.text("OK")
+						.attr("type","button")
+						.addClass(OK_BTN_CLS + " " + EDIT_MODE_CLS)
+						.click(acceptEdit)
+						.insertAfter(editableSpan);
+				var input = $("<input type = 'text'/>")
+						.attr("class", parent.attr("class"))
+						.addClass(TEXT_INPUT_CLS + " " + EDIT_MODE_CLS)
+						.val(editableSpan.text())
+						.prop("defaultValue", editableSpan.text())
+						.keyup(checkShortcuts)
+						.insertBefore(editableSpan)
+						.focus();
+							
+				parent.find("." + NORMAL_MODE_CLS)
+						.remove();
+			} else {
+				console.log("edit stopped");
+			}
 		};
 		
 		var acceptEdit = function(e) {
@@ -67,7 +71,15 @@
 				);
 			}
 			
-			revertEdit(parent, keepChanges);
+			if (!e.isPropagationStopped()) {	
+				revertEdit(parent, keepChanges);
+			} else {
+				if (keepChanges) {
+					console.log("accept stopped");
+				} else {
+					console.log("cancel edit stopped");
+				}
+			}	
 		}
 		
 		function checkShortcuts(event) {
@@ -113,7 +125,6 @@
 					.click(startEdit);
 		}
 		
-		
 		this.each(function() {
 			var editable = $(this);
 		
@@ -125,4 +136,7 @@
 		
 		return this;
 	};
-}( jQuery ));
+	
+}( jQuery, true ? { log: function() { } } : console ));
+
+
