@@ -1,0 +1,86 @@
+<html>
+	<head>
+		<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script language="javascript" type="text/javascript" src="file:///c:/projects/omni-editable/omni-editable.js"></script>
+	</head>
+
+	<body onload="testPropagation()">
+	
+		
+		<table>
+			
+			<tbody>
+				<tr>
+					<td id="normalEditTable" class="editable ">Table - Normal Edit</td>
+				</tr>
+				<tr>
+					<td  id="propagateEditTable" class="editable red">Table - Propagate Edit</td>
+				</tr>
+				<tr>
+					<td id="propagateAcceptTable" class="editable">Table - Propagate Accept</td>
+				</tr>			
+				<tr>
+					<td id="propagateCancelTable" class="editable green">Table - Propagate Cancel</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<ul>
+			<li id="normalEditList" class="editable">List - Normal Edit</li>
+			<li id="propagateEditList" class="editable red">List - Propagate Edit</li>
+			<li id="propagateAcceptList" class="editable">List - Propagate Accept</li>
+			<li id="propagateCancelList" class="editable green">List - Propagate Cancel</li>
+		</ul>
+	</body>
+
+
+	<style>
+		.red{
+			color:red;
+		}
+		
+		.green{
+			color:green;
+		}
+		
+	</style>
+	
+	<script type="text/javascript">
+		
+		$(document).ready( function(){
+			var items=createOmniEditable();
+			
+			testPropagation();
+			
+			function createOmniEditable() {
+				return $(".editable").omniEditable( {
+					onAcceptEdit: function(e, elem, text, prText) {
+						if(elem.attr("id")=="propagateAcceptList" || 
+							elem.attr("id")=="propagateAcceptTable") {
+							e.stopPropagation();
+						}
+					},
+					onCancelEdit: function(e, elem, text, prText) {
+						if(elem.attr("id")=="propagateCancelList" 
+							|| elem.attr("id")=="propagateCancelTable") {
+							e.stopPropagation();
+						}
+					},
+					onStartEdit: function(e, elem, text){
+						if(elem.attr("id")=="propagateEditList" 
+							|| elem.attr("id")=="propagateEditTable") {
+							e.stopPropagation();
+						}
+					}
+				});
+			}
+			
+			function testPropagation() {
+				items.find("#normalEditTable").startEdit();
+			}
+		});
+		
+		
+	</script>
+
+</html>
