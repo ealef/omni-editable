@@ -1,10 +1,21 @@
+<style>
+	.red{
+		color:red;
+	}
+		
+	.green{
+		color:green;
+	}
+		
+</style>
+
 <html>
 	<head>
-		<script language="javascript" type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-		<script language="javascript" type="text/javascript" src="file:///c:/projects/omni-editable/omni-editable.js"></script>
+		<script  type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script  type="text/javascript" src="file:///c:/projects/omni-editable/omni-editable.js"></script>
 	</head>
 
-	<body onload="testPropagation()">
+	<body>
 	
 		
 		<table>
@@ -31,27 +42,21 @@
 			<li id="propagateAcceptList" class="editable">List - Propagate Accept</li>
 			<li id="propagateCancelList" class="editable green">List - Propagate Cancel</li>
 		</ul>
+
+        <button id="test">TestStartEdit</button>
+        
+
 	</body>
 
 
-	<style>
-		.red{
-			color:red;
-		}
-		
-		.green{
-			color:green;
-		}
-		
-	</style>
+	
 	
 	<script type="text/javascript">
 		
 		$(document).ready( function(){
 			var items=createOmniEditable();
 			
-			testPropagation();
-			
+            
 			function createOmniEditable() {
 				return $(".editable").omniEditable( {
 					onAcceptEdit: function(e, elem, text, prText) {
@@ -74,10 +79,21 @@
 					}
 				});
 			}
+
+
+			//function testPropagation(e) {
+		    //    items[0].startEdit(e);
+		    //}
 			
-			function testPropagation() {
-				items.find("#normalEditTable").startEdit();
-			}
+			//$("#test").click(function (event) {
+			//    testPropagation(event);
+			//});
+
+			//$("#Button1").click(function (event) {
+			//    var myPlugin = $('#id').myPlugin();
+
+			//    myPlugin.bar();
+			//}
 		});
 		
 		
