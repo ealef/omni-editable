@@ -1,12 +1,31 @@
 <style>
 	.red{
-		color:red;
+		color:indianred;
 	}
 		
 	.green{
 		color:green;
 	}
-		
+
+    .greyBackground {
+        background-color:lightgrey;
+        font-family:Roboto;
+    }
+
+    .flatBlueButton {
+        border:none;
+        color:white;
+        background-color:#0094ff;
+        margin-left:5px;
+        width:80px;
+        cursor:pointer;
+       
+    }
+
+    .lightBlue {
+        background-color:lightcyan;
+        border:none;
+    }
 </style>
 
 <html>
@@ -18,11 +37,11 @@
 	<body>
 	
 		
-		<table>
+		<!--<table>
 			
 			<tbody>
 				<tr>
-					<td id="normalEditTable" class="editable ">Table - Normal Edit</td>
+					<td id="normalEditTable" >Table - Normal Edit</td>
 				</tr>
 				<tr>
 					<td  id="propagateEditTable" class="editable red">Table - Propagate Edit</td>
@@ -41,11 +60,17 @@
 			<li id="propagateEditList" class="editable red">List - Propagate Edit</li>
 			<li id="propagateAcceptList" class="editable">List - Propagate Accept</li>
 			<li id="propagateCancelList" class="editable green">List - Propagate Cancel</li>
-		</ul>
+		</ul>-->
 
-        <button id="test">TestStartEdit</button>
-        
+       
+        <button id="testOthersRemoveEdit">Test Remove Button on Other Elements </button>
 
+        <div id="testingParagraphDiv" class="greyBackground">
+            <p id="testingParagraph">Testing paragraph</p>
+
+            <button id="removeEdit">Remove Edit Button</button>
+            <button id="alertText">Alert text</button>
+        </div>
 	</body>
 
 
@@ -53,8 +78,10 @@
 	
 	<script type="text/javascript">
 		
-		$(document).ready( function(){
+	    $(document).ready(function () {
+	       
 			var items=createOmniEditable();
+			
 			
             
 			function createOmniEditable() {
@@ -79,21 +106,47 @@
 					}
 				});
 			}
+			var paragraphEdit = $("#testingParagraph").omniEditable( {
+			    editButtonText: "Click me",
+			    okButtonText: "Happy",
+                cancelButtonText: "Unhappy",
+                buttonClass: "flatBlueButton",
+                textInputClass: "lightBlue"
+			});
 
+			var callRemoveEdit=function(onlyParagraph) {
+			    if (onlyParagraph) {
+			        paragraphEdit.removeEditButton();
+                } else {
+                    //NOT WORKING!
+                    //items.each(function () {
+                    //    this.removeEditButton();
+                    //});
 
-			//function testPropagation(e) {
-		    //    items[0].startEdit(e);
-		    //}
+                    //NOT WORKING!
+                    //items[0].removeEditButton();
+
+                    //NOT WORKING!
+                    //items.get(0).removeEditButton();
+
+                    //NOT WORKING!
+                    //items.first().removeEditButton();
+			    }
+                
+			 }
+
 			
-			//$("#test").click(function (event) {
-			//    testPropagation(event);
-			//});
+			$("#testOthersRemoveEdit").click(function () {
+			    callRemoveEdit(false);
+			});
 
-			//$("#Button1").click(function (event) {
-			//    var myPlugin = $('#id').myPlugin();
+            $("#removeEdit").click(function () {
+			    callRemoveEdit(true);
+            });
 
-			//    myPlugin.bar();
-			//}
+            $("#alertText").click(function () {
+                alert(paragraphEdit.editedText());
+            });
 		});
 		
 		
