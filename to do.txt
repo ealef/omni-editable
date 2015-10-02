@@ -1,0 +1,19 @@
+---keyboard shortcuts (done for enter, esc)
+
+--emit events when edit, commit or cancel happens ---- check what he does with the event
+
+customizable edit , commit and cancel functions
+
+--css customizable classes for all included controls
+
+input controls of different types (e-mail, telephone, number, etc)
+
+edit forms with radio buttons, check boxes, dropdown list etc
+
+ability to add custom operations
+
+super duper sample
+
+undo even if confirm edit has happened
+
+

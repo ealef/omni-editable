@@ -24,10 +24,15 @@
         // ...
 
         // support multiple elements
-        if (this.length > 1) {
+        /*if (this.length > 1) {
             this.each(function () { $(this).omniEditable(options) });
+			//this.removeEditButton = function () {
+			//	this.find("." + EDIT_BTN_CLS).remove();
+			//	console.log("button removed");
+			//};
+
             return this;
-        }
+        }*/
 
         
        
@@ -36,11 +41,9 @@
             var parent = $(this).parent();
             var editableSpan = parent.find("." + EDITABLE_SPAN_CLS);
 
-            //if (options != null) {
-                if (internalOptions.onStartEdit !== undefined) {
-                    internalOptions.onStartEdit(e, parent, editableSpan.html());
-                }
-            //}
+			if (internalOptions.onStartEdit !== undefined) {
+				internalOptions.onStartEdit(e, parent, editableSpan.html());
+			}            
 
             if (!e.isPropagationStopped()) {
                 var cancelButton = $("<button>Cancel</button>")
@@ -88,22 +91,20 @@
         function exitEditMode(e, clickedButton, keepChanges) {
             var parent = clickedButton.parent();
 
-            //if (internalOptions != null) {
-                var optionEvent = keepChanges ?
-                        internalOptions.onAcceptEdit :
-                        internalOptions.onCancelEdit;
+			var optionEvent = keepChanges ?
+					internalOptions.onAcceptEdit :
+					internalOptions.onCancelEdit;
 
-                if (optionEvent !== undefined) {
-                    var input = parent.find("." + TEXT_INPUT_CLS);
+			if (optionEvent !== undefined) {
+				var input = parent.find("." + TEXT_INPUT_CLS);
 
-                    optionEvent(
-                        e,
-                        parent,
-                        input.val(),
-                        input.prop("defaultValue")
-                    );
-                }
-            //}
+				optionEvent(
+					e,
+					parent,
+					input.val(),
+					input.prop("defaultValue")
+				);
+			}
 
             if (!e.isPropagationStopped()) {
                 revertEdit(parent, keepChanges);
@@ -155,7 +156,7 @@
             var classes = EDIT_BTN_CLS + " "
                         + NORMAL_MODE_CLS + " "
                         + EDIT_BTN_STYLE_CLS;
-            //console.log(classes);
+            
             return $("<button></button>")
 					.text(EDIT_BTN_TEXT)
 					.attr("type", "button")
@@ -203,11 +204,19 @@
             }
 
         }
-
+		
+		function removeEditButton(editable) {
+			editable.find("." + EDIT_BTN_CLS).remove();
+		}
+		
+		function editedText(editable) {
+			return editable.find("."+EDITABLE_SPAN_CLS).html();
+		}
+		
         // ...
 
         // public methods        
-        this.initialize = function () {
+        /*this.initialize = function () {
             this.each(function () {
                 var editable = $(this);
 
@@ -219,18 +228,44 @@
                         .append(createEditButton(editable));
             });
             return this;
-        };
+        };*/
+		function decorate(editable)
+		{
+			editable.removeEditButton = function () {
+				removeEditButton($(this));
+			};
 
-        this.removeEditButton = function () {
-            this.find("." + EDIT_BTN_CLS).remove();
-            console.log("button removed");
-        };
+			editable.editedText = function () {
+				return editedText($(this));          
+			}
+			return editable;
+		}
+		
+		
+        //return this.initialize();
+		
+		this.each(function () {
+			var editable = $(this);
+			initializeOptions(options);
+			
+			var editableHtml = editable.html();
+			editable.empty()
+					.append(createSpan(editable, editableHtml))
+					.append(createEditButton(editable));
+					
+			/*this.removeEditButton = function () {
+				removeEditButton(editable);
+			};
 
-        this.editedText = function () {
-            return this.find("."+EDITABLE_SPAN_CLS).html();
-            
-        }
-
-        return this.initialize();
+			this.editedText = function () {
+				return editedText(editable);
+				
+			}*/
+			//debugger
+			decorate(this);
+			
+		});
+		
+		return decorate(this);
     }
 }(jQuery, false ? { log: function() { } } : console ));

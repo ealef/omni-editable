@@ -37,11 +37,11 @@
 	<body>
 	
 		
-		<!--<table>
+			<table>
 			
 			<tbody>
 				<tr>
-					<td id="normalEditTable" >Table - Normal Edit</td>
+					<td id="normalEditTable" class="editable" >Table - Normal Edit</td>
 				</tr>
 				<tr>
 					<td  id="propagateEditTable" class="editable red">Table - Propagate Edit</td>
@@ -60,9 +60,9 @@
 			<li id="propagateEditList" class="editable red">List - Propagate Edit</li>
 			<li id="propagateAcceptList" class="editable">List - Propagate Accept</li>
 			<li id="propagateCancelList" class="editable green">List - Propagate Cancel</li>
-		</ul>-->
+		</ul>
 
-       
+		<button id="testRemoveFirstEdit">Test Remove Button on First Element </button>
         <button id="testOthersRemoveEdit">Test Remove Button on Other Elements </button>
 
         <div id="testingParagraphDiv" class="greyBackground">
@@ -79,7 +79,6 @@
 	<script type="text/javascript">
 		
 	    $(document).ready(function () {
-	       
 			var items=createOmniEditable();
 			
 			
@@ -106,42 +105,25 @@
 					}
 				});
 			}
+			
 			var paragraphEdit = $("#testingParagraph").omniEditable( {
 			    editButtonText: "Click me",
 			    okButtonText: "Happy",
                 cancelButtonText: "Unhappy",
                 buttonClass: "flatBlueButton",
                 textInputClass: "lightBlue"
-			});
-
-			var callRemoveEdit=function(onlyParagraph) {
-			    if (onlyParagraph) {
-			        paragraphEdit.removeEditButton();
-                } else {
-                    //NOT WORKING!
-                    //items.each(function () {
-                    //    this.removeEditButton();
-                    //});
-
-                    //NOT WORKING!
-                    //items[0].removeEditButton();
-
-                    //NOT WORKING!
-                    //items.get(0).removeEditButton();
-
-                    //NOT WORKING!
-                    //items.first().removeEditButton();
-			    }
-                
-			 }
-
+			});			
 			
 			$("#testOthersRemoveEdit").click(function () {
-			    callRemoveEdit(false);
+			    items.removeEditButton();
 			});
-
+			
+			$("#testRemoveFirstEdit").click(function () {
+			    items.get(0).removeEditButton();
+			});
+			
             $("#removeEdit").click(function () {
-			    callRemoveEdit(true);
+			    paragraphEdit.removeEditButton();
             });
 
             $("#alertText").click(function () {
