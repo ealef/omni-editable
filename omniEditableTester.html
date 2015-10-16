@@ -36,31 +36,37 @@
 
 	<body>
 	
-		
-			<table>
-			
-			<tbody>
-				<tr>
-					<td id="normalEditTable" class="editable" >Table - Normal Edit</td>
-				</tr>
-				<tr>
-					<td  id="propagateEditTable" class="editable red">Table - Propagate Edit</td>
-				</tr>
-				<tr>
-					<td id="propagateAcceptTable" class="editable">Table - Propagate Accept</td>
-				</tr>			
-				<tr>
-					<td id="propagateCancelTable" class="editable green">Table - Propagate Cancel</td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<ul>
-			<li id="normalEditList" class="editable">List - Normal Edit</li>
-			<li id="propagateEditList" class="editable red">List - Propagate Edit</li>
-			<li id="propagateAcceptList" class="editable">List - Propagate Accept</li>
-			<li id="propagateCancelList" class="editable green">List - Propagate Cancel</li>
-		</ul>
+		<div id="exampleTable">
+			<table>		
+			    <tbody>
+				    <tr>
+					    <td id="normalEditTable" class="editable" >Table - Normal Edit</td>
+				    </tr>
+				    <tr>
+					    <td  id="propagateEditTable" class="editable red">Table - Propagate Edit</td>
+				    </tr>
+				    <tr>
+					    <td id="propagateAcceptTable" class="editable">Table - Propagate Accept</td>
+				    </tr>			
+				    <tr>
+					    <td id="propagateCancelTable" class="editable green">Table - Propagate Cancel</td>
+				    </tr>
+			    </tbody>
+		    </table>
+		</div>
+        
+        <div id="exampleListItems">
+		    <ul>
+			    <li id="normalEditList" class="editable">List - Normal Edit</li>
+			    <li id="propagateEditList" class="editable red">List - Propagate Edit</li>
+			    <li id="propagateAcceptList" class="editable">List - Propagate Accept</li>
+			    <li id="propagateCancelList" class="editable green">List - Propagate Cancel</li>
+		    </ul>
+        </div>
+        
+        <div id="exampleOtherElements">
+            <a id="editableAncor" href="https://www.youtube.com/watch?v=ZWcc5VJiRVA" class="editable">edit this ancor's text</a>
+        </div>
 
 		<button id="testRemoveFirstEdit">Test Remove Button on First Element </button>
         <button id="testOthersRemoveEdit">Test Remove Button on Other Elements </button>

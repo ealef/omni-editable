@@ -21,59 +21,44 @@
 
         var internalOptions = [];
         
-        // ...
-
-        // support multiple elements
-        /*if (this.length > 1) {
-            this.each(function () { $(this).omniEditable(options) });
-			//this.removeEditButton = function () {
-			//	this.find("." + EDIT_BTN_CLS).remove();
-			//	console.log("button removed");
-			//};
-
-            return this;
-        }*/
-
-        
-       
         // private methods
         var startEdit = function (e) {
-            var parent = $(this).parent();
-            var editableSpan = parent.find("." + EDITABLE_SPAN_CLS);
+            var $parent = $(this).parent();
+            var $editableSpan = $parent.find("." + EDITABLE_SPAN_CLS);
 
 			if (internalOptions.onStartEdit !== undefined) {
-				internalOptions.onStartEdit(e, parent, editableSpan.html());
+				internalOptions.onStartEdit(e, $parent, $editableSpan.html());
 			}            
 
             if (!e.isPropagationStopped()) {
-                var cancelButton = $("<button>Cancel</button>")
+                var $cancelButton = $("<button>Cancel</button>")
 						.text(CANCEL_BTN_TEXT)
 						.attr("type", "button")
 						.click(cancelEdit)
 						.addClass(CANCEL_BTN_CLS + " " 
                                 + EDIT_MODE_CLS + " " 
                                 + CANCEL_BTN_STYLE_CLS)
-						.insertAfter(editableSpan);
-                var okButton = $("<button></button>")
+						.insertAfter($editableSpan);
+                var $okButton = $("<button></button>")
 						.text(OK_BTN_TEXT)
 						.attr("type", "button")
 						.addClass(OK_BTN_CLS + " "
                         + EDIT_MODE_CLS + " "
                         + OK_BTN_STYLE_CLS)
 						.click(acceptEdit)
-						.insertAfter(editableSpan);
-                var input = $("<input type = 'text'/>")
-						.attr("class", parent.attr("class"))
+						.insertAfter($editableSpan);
+                var $input = $("<input type = 'text'/>")
+						.attr("class", $parent.attr("class"))
 						.addClass(TEXT_INPUT_CLS + " "
                                 + EDIT_MODE_CLS + " "
                                 + TEXT_INPUT_STYLE_CLS)
-						.val(editableSpan.text())
-						.prop("defaultValue", editableSpan.text())
+						.val($editableSpan.text())
+						.prop("defaultValue", $editableSpan.text())
 						.keyup(checkShortcuts)
-						.insertBefore(editableSpan)
+						.insertBefore($editableSpan)
 						.focus();
 
-                parent.find("." + NORMAL_MODE_CLS)
+                $parent.find("." + NORMAL_MODE_CLS)
 						.remove();
             } else {
                 console.log("edit stopped");
@@ -88,26 +73,26 @@
             exitEditMode(e, $(this), false);
         };
 
-        function exitEditMode(e, clickedButton, keepChanges) {
-            var parent = clickedButton.parent();
+        function exitEditMode(e, $clickedButton, keepChanges) {
+            var $parent = $clickedButton.parent();
 
 			var optionEvent = keepChanges ?
 					internalOptions.onAcceptEdit :
 					internalOptions.onCancelEdit;
 
 			if (optionEvent !== undefined) {
-				var input = parent.find("." + TEXT_INPUT_CLS);
+				var input = $parent.find("." + TEXT_INPUT_CLS);
 
 				optionEvent(
 					e,
-					parent,
+					$parent,
 					input.val(),
 					input.prop("defaultValue")
 				);
 			}
 
             if (!e.isPropagationStopped()) {
-                revertEdit(parent, keepChanges);
+                revertEdit($parent, keepChanges);
             } else {
                 if (keepChanges) {
                     console.log("accept stopped");
@@ -119,40 +104,37 @@
 
         function checkShortcuts(event) {
             var code = event.keyCode || event.which;
-            var parent = $(this).parent();
+            var $parent = $(this).parent();
 
             switch (code) {
                 case 13:	// ENTER
-                    acceptEdit.call(parent.find("." + OK_BTN_CLS));
+                    acceptEdit.call($parent.find("." + OK_BTN_CLS));
                     break;
                 case 27:	// ESC
-                    cancelEdit.call(parent.find("." + CANCEL_BTN_CLS));
+                    cancelEdit.call($parent.find("." + CANCEL_BTN_CLS));
                     break;
             }
         }
 
-        function revertEdit(editable, keepChanges) {
+        function revertEdit($editable, keepChanges) {
             var spanHtml = keepChanges ?
-					editable.find("." + TEXT_INPUT_CLS).val() :
-					editable.find("." + TEXT_INPUT_CLS).prop("defaultValue");
+					$editable.find("." + TEXT_INPUT_CLS).val() :
+					$editable.find("." + TEXT_INPUT_CLS).prop("defaultValue");
 
-            editable.append(createSpan(editable, spanHtml))
-					.append(createEditButton(editable))
-					.find("." + EDIT_MODE_CLS)
-					.remove();
+            editableToNormalMode($editable,spanHtml);
         }
 
-        function createSpan(editable, html) {
+        function createSpan($editable, html) {
             return $("<span></span>")
 					.html(html)
 					.addClass([
-						editable.attr("class"),
+						$editable.attr("class"),
 						EDITABLE_SPAN_CLS,
 						NORMAL_MODE_CLS
 					].join(" "));
         }
 
-        function createEditButton(editable) {
+        function createEditButton($editable) {
             var classes = EDIT_BTN_CLS + " "
                         + NORMAL_MODE_CLS + " "
                         + EDIT_BTN_STYLE_CLS;
@@ -162,6 +144,14 @@
 					.attr("type", "button")
 					.addClass(classes)
 					.click(startEdit);
+        }
+
+        function editableToNormalMode($editable, spanHtml) {           
+            $editable.empty()
+                    .append(createSpan($editable, spanHtml))
+            		.append(createEditButton($editable))
+            		.find("." + EDIT_MODE_CLS)
+            		.remove();
         }
 
         function initializeOptions(options) {
@@ -190,7 +180,7 @@
             if (internalOptions.textInputClass !== undefined) {
                 TEXT_INPUT_STYLE_CLS = internalOptions.textInputClass;
             }
-            console.log("input class:" + TEXT_INPUT_STYLE_CLS);
+            
             if (internalOptions.editButtonText !== undefined) {
                 EDIT_BTN_TEXT = internalOptions.editButtonText;
             }
@@ -202,68 +192,35 @@
             if (internalOptions.okButtonText !== undefined) {
                 OK_BTN_TEXT = internalOptions.okButtonText;
             }
-
         }
 		
-		function removeEditButton(editable) {
-			editable.find("." + EDIT_BTN_CLS).remove();
+		function removeEditButton($editable) {
+			$editable.find("." + EDIT_BTN_CLS).remove();
 		}
 		
-		function editedText(editable) {
-			return editable.find("."+EDITABLE_SPAN_CLS).html();
-		}
-		
-        // ...
-
-        // public methods        
-        /*this.initialize = function () {
-            this.each(function () {
-                var editable = $(this);
-
-                initializeOptions(options);
-                
-                var editableHtml = editable.html();
-                editable.empty()
-                        .append(createSpan(editable, editableHtml))
-                        .append(createEditButton(editable));
-            });
-            return this;
-        };*/
-		function decorate(editable)
+		function editedText($editable) {
+			return $editable.find("."+EDITABLE_SPAN_CLS).html();
+		}		
+        
+		function decorate($editable)// public methods
 		{
-			editable.removeEditButton = function () {
+			$editable.removeEditButton = function () {
 				removeEditButton($(this));
 			};
 
-			editable.editedText = function () {
+			$editable.editedText = function () {
 				return editedText($(this));          
 			}
-			return editable;
+			return $editable;
 		}
 		
-		
-        //return this.initialize();
-		
 		this.each(function () {
-			var editable = $(this);
-			initializeOptions(options);
-			
-			var editableHtml = editable.html();
-			editable.empty()
-					.append(createSpan(editable, editableHtml))
-					.append(createEditButton(editable));
-					
-			/*this.removeEditButton = function () {
-				removeEditButton(editable);
-			};
+			var $editable = $(this);
+			var editableHtml = $editable.html();
 
-			this.editedText = function () {
-				return editedText(editable);
-				
-			}*/
-			//debugger
-			decorate(this);
-			
+            initializeOptions(options);
+			editableToNormalMode($editable, editableHtml);
+			decorate(this);		
 		});
 		
 		return decorate(this);
