@@ -18,9 +18,57 @@
         var OK_BTN_STYLE_CLS = "";
         var OK_BTN_TEXT = "OK";
         var TEXT_INPUT_STYLE_CLS = "";
-
+        var EDIT_MODE = "buttonAndDoubleClick"; //button | 
+                                                //doubleClick | 
+                                                //buttonAndButtonClick
+       
         var internalOptions = [];
-        
+
+        function initializeOptions(options) {
+            if (options != null) {
+                internalOptions = options;
+            }
+
+            if (internalOptions.buttonClass !== undefined) {
+                EDIT_BTN_STYLE_CLS = internalOptions.buttonClass;
+                CANCEL_BTN_STYLE_CLS = internalOptions.buttonClass;
+                OK_BTN_STYLE_CLS = internalOptions.buttonClass;
+            } else {
+                if (internalOptions.editButtonClass !== undefined) {
+                    EDIT_BTN_STYLE_CLS = internalOptions.editButtonClass;
+                }
+
+                if (internalOptions.cancelButtonClass !== undefined) {
+                    CANCEL_BTN_STYLE_CLS = internalOptions.cancelButtonClass;
+                }
+
+                if (internalOptions.okButtonClass !== undefined) {
+                    OK_BTN_STYLE_CLS = internalOptions.okButtonClass;
+                }
+            }
+
+            if (internalOptions.textInputClass !== undefined) {
+                TEXT_INPUT_STYLE_CLS = internalOptions.textInputClass;
+            }
+            
+            if (internalOptions.editButtonText !== undefined) {
+                EDIT_BTN_TEXT = internalOptions.editButtonText;
+            }
+
+            if (internalOptions.cancelButtonText !== undefined) {
+                CANCEL_BTN_TEXT = internalOptions.cancelButtonText;
+            }
+
+            if (internalOptions.okButtonText !== undefined) {
+                OK_BTN_TEXT = internalOptions.okButtonText;
+            }
+
+            if (internalOptions.editMode !== undefined) {
+                EDIT_MODE = internalOptions.editMode;
+            }
+
+            
+        }
         // private methods
         var startEdit = function (e) {
             var $parent = $(this).parent();
@@ -125,25 +173,38 @@
         }
 
         function createSpan($editable, html) {
-            return $("<span></span>")
+            var $span = $("<span></span>")
 					.html(html)
-					.addClass([
-						$editable.attr("class"),
-						EDITABLE_SPAN_CLS,
-						NORMAL_MODE_CLS
-					].join(" "));
+					.addClass(
+                        [
+						    $editable.attr("class"),
+						    EDITABLE_SPAN_CLS,
+						    NORMAL_MODE_CLS
+                        ].join(" "));
+
+            if (EDIT_MODE != "button") {
+                $span.dblclick(startEdit);
+            } else {
+                $span.css("cursor","default");
+            }
+
+            return $span;
         }
 
         function createEditButton($editable) {
-            var classes = EDIT_BTN_CLS + " "
-                        + NORMAL_MODE_CLS + " "
-                        + EDIT_BTN_STYLE_CLS;
-            
-            return $("<button></button>")
-					.text(EDIT_BTN_TEXT)
-					.attr("type", "button")
-					.addClass(classes)
-					.click(startEdit);
+            if (EDIT_MODE != "doubleClick") {
+                var classes = EDIT_BTN_CLS + " "
+                            + NORMAL_MODE_CLS + " "
+                            + EDIT_BTN_STYLE_CLS;
+
+                return $("<button></button>")
+					    .text(EDIT_BTN_TEXT)
+					    .attr("type", "button")
+					    .addClass(classes)
+					    .click(startEdit);
+            } else {
+                return "";
+            }
         }
 
         function editableToNormalMode($editable, spanHtml) {           
@@ -154,46 +215,6 @@
             		.remove();
         }
 
-        function initializeOptions(options) {
-            if (options != null) {
-                internalOptions = options;
-            }
-
-            if (internalOptions.buttonClass !== undefined) {
-                EDIT_BTN_STYLE_CLS = internalOptions.buttonClass;
-                CANCEL_BTN_STYLE_CLS = internalOptions.buttonClass;
-                OK_BTN_STYLE_CLS = internalOptions.buttonClass;
-            } else {
-                if (internalOptions.editButtonClass !== undefined) {
-                    EDIT_BTN_STYLE_CLS = internalOptions.editButtonClass;
-                }
-
-                if (internalOptions.cancelButtonClass !== undefined) {
-                    CANCEL_BTN_STYLE_CLS = internalOptions.cancelButtonClass;
-                }
-
-                if (internalOptions.okButtonClass !== undefined) {
-                    OK_BTN_STYLE_CLS = internalOptions.okButtonClass;
-                }
-            }
-
-            if (internalOptions.textInputClass !== undefined) {
-                TEXT_INPUT_STYLE_CLS = internalOptions.textInputClass;
-            }
-            
-            if (internalOptions.editButtonText !== undefined) {
-                EDIT_BTN_TEXT = internalOptions.editButtonText;
-            }
-
-            if (internalOptions.cancelButtonText !== undefined) {
-                CANCEL_BTN_TEXT = internalOptions.cancelButtonText;
-            }
-
-            if (internalOptions.okButtonText !== undefined) {
-                OK_BTN_TEXT = internalOptions.okButtonText;
-            }
-        }
-		
 		function removeEditButton($editable) {
 			$editable.find("." + EDIT_BTN_CLS).remove();
 		}

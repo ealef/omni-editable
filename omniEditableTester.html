@@ -3,7 +3,7 @@
 		color:indianred;
 	}
 		
-	.green{
+	.greenText{
 		color:green;
 	}
 
@@ -12,20 +12,42 @@
         font-family:Roboto;
     }
 
-    .flatBlueButton {
-        border:none;
-        color:white;
+    .blue {
         background-color:#0094ff;
-        margin-left:5px;
-        width:80px;
-        cursor:pointer;
-       
     }
 
     .lightBlue {
         background-color:lightcyan;
+    }
+
+    .orange {
+        background-color:orange;
+    }
+
+    .lightOrange {
+        background-color:lightsalmon;
+    }
+
+    .green {
+        background-color:forestgreen;
+    }
+
+    .lightGreen {
+        background-color:lightgreen;
+    }
+
+    .noBorder {
         border:none;
     }
+
+    .flatButton {
+        border:none;
+        color:white;      
+        margin-left:5px;
+        width:80px;
+        cursor:pointer;      
+    }
+
 </style>
 
 <html>
@@ -49,7 +71,7 @@
 					    <td id="propagateAcceptTable" class="editable">Table - Propagate Accept</td>
 				    </tr>			
 				    <tr>
-					    <td id="propagateCancelTable" class="editable green">Table - Propagate Cancel</td>
+					    <td id="propagateCancelTable" class="editable greenText">Table - Propagate Cancel</td>
 				    </tr>
 			    </tbody>
 		    </table>
@@ -60,7 +82,7 @@
 			    <li id="normalEditList" class="editable">List - Normal Edit</li>
 			    <li id="propagateEditList" class="editable red">List - Propagate Edit</li>
 			    <li id="propagateAcceptList" class="editable">List - Propagate Accept</li>
-			    <li id="propagateCancelList" class="editable green">List - Propagate Cancel</li>
+			    <li id="propagateCancelList" class="editable greenText">List - Propagate Cancel</li>
 		    </ul>
         </div>
         
@@ -73,22 +95,19 @@
 
         <div id="testingParagraphDiv" class="greyBackground">
             <p id="testingParagraph">Testing paragraph</p>
+            <p id="P1">Testing - only double click</p>
+            <p id="P2">Testing - only edit button</p>
 
             <button id="removeEdit">Remove Edit Button</button>
             <button id="alertText">Alert text</button>
         </div>
 	</body>
-
-
-	
 	
 	<script type="text/javascript">
 		
 	    $(document).ready(function () {
 			var items=createOmniEditable();
-			
-			
-            
+			          
 			function createOmniEditable() {
 				return $(".editable").omniEditable( {
 					onAcceptEdit: function(e, elem, text, prText) {
@@ -116,9 +135,34 @@
 			    editButtonText: "Click me",
 			    okButtonText: "Happy",
                 cancelButtonText: "Unhappy",
-                buttonClass: "flatBlueButton",
-                textInputClass: "lightBlue"
-			});			
+                buttonClass: "flatButton blue",
+                textInputClass: "noBorder lightBlue"
+			});
+
+            $("#removeEdit").click(function () {
+			    paragraphEdit.removeEditButton();
+            });
+
+            $("#alertText").click(function () {
+                alert(paragraphEdit.editedText());
+            });
+
+			var paragraphEdit1 = $("#P1").omniEditable({
+			    okButtonText: "Go on",
+			    cancelButtonText: "Go back",
+			    buttonClass: "flatButton orange",
+			    textInputClass: "noBorder lightOrange",
+                editMode:"doubleClick"
+			});
+
+			var paragraphEdit2 = $("#P2").omniEditable({
+			    editButtonText: "Click me",
+			    okButtonText: "Happy",
+			    cancelButtonText: "Unhappy",
+			    buttonClass: "flatButton green",
+			    textInputClass: "noBorder lightGreen",
+                editMode: "button"
+			});
 			
 			$("#testOthersRemoveEdit").click(function () {
 			    items.removeEditButton();
@@ -128,13 +172,7 @@
 			    items.get(0).removeEditButton();
 			});
 			
-            $("#removeEdit").click(function () {
-			    paragraphEdit.removeEditButton();
-            });
-
-            $("#alertText").click(function () {
-                alert(paragraphEdit.editedText());
-            });
+            
 		});
 		
 		
