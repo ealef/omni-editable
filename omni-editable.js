@@ -21,6 +21,25 @@
         var EDIT_MODE = "buttonAndDoubleClick"; //button | 
                                                 //doubleClick | 
                                                 //buttonAndButtonClick
+        //BTN object properties: 
+                            //cssClass, 
+                            //internalClass, 
+                            //text,
+                            //visible
+
+        var DUPLICATE_BTN = {
+            cssClass:"",
+            internalClass: "duplicateButton",
+            text: "Duplicate",
+            visible:false
+        };
+
+        var REMOVE_BTN = {
+            cssClass:"",
+            internalClass: "removeButton",
+            text: "Remove",
+            visible: false      
+        };
        
         var internalOptions = [];
 
@@ -67,7 +86,25 @@
                 EDIT_MODE = internalOptions.editMode;
             }
 
+            if (internalOptions.duplicateButton !== undefined) {
+                DUPLICATE_BTN.visible = internalOptions.duplicateButton.visible;
+                if (internalOptions.duplicateButton.text != undefined) {
+                    DUPLICATE_BTN.text = internalOptions.duplicateButton.text;
+                }
+                if (internalOptions.duplicateButton.cssClass != undefined) {
+                    DUPLICATE_BTN.cssClass = internalOptions.duplicateButton.cssClass;
+                }
+            }
             
+            if (internalOptions.removeButton !== undefined) {
+                REMOVE_BTN.visible = internalOptions.removeButton.visible;
+                if (internalOptions.removeButton.text != undefined) {
+                    REMOVE_BTN.text = internalOptions.removeButton.text;
+                }
+                if (internalOptions.removeButton.cssClass != undefined) {
+                    REMOVE_BTN.cssClass = internalOptions.removeButton.cssClass;
+                }
+            }
         }
         // private methods
         var startEdit = function (e) {
@@ -119,6 +156,12 @@
 
         var cancelEdit = function (e) {
             exitEditMode(e, $(this), false);
+        };
+
+        var removeEditable = function () {
+        };
+
+        var duplicateEditable = function () {
         };
 
         function exitEditMode(e, $clickedButton, keepChanges) {
@@ -191,7 +234,7 @@
             return $span;
         }
 
-        function createEditButton($editable) {
+        function createEditButton() {
             if (EDIT_MODE != "doubleClick") {
                 var classes = EDIT_BTN_CLS + " "
                             + NORMAL_MODE_CLS + " "
@@ -207,10 +250,30 @@
             }
         }
 
+        function createExtraButton(button, onClickFunction) {
+            console.log(button.cssClass);
+            if (button.visible) {
+                var classes = button.internalClass + " "
+                            + button.cssClass + " "
+                            + NORMAL_MODE_CLS + " ";
+
+                return $("<button></button>")
+                        .text(button.text)
+                        .attr("type", "button")
+                        .addClass(classes)
+                        .click(onClickFunction);
+            } else {
+                return "";
+            }
+
+        }
+
         function editableToNormalMode($editable, spanHtml) {           
             $editable.empty()
                     .append(createSpan($editable, spanHtml))
             		.append(createEditButton($editable))
+                    .append(createExtraButton(REMOVE_BTN,removeEditable))
+                    .append(createExtraButton(DUPLICATE_BTN,duplicateEditable))
             		.find("." + EDIT_MODE_CLS)
             		.remove();
         }

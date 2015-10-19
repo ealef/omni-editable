@@ -1,4 +1,8 @@
 <style>
+    body {
+        font-family: Roboto;
+    }
+
 	.red{
 		color:indianred;
 	}
@@ -9,7 +13,7 @@
 
     .greyBackground {
         background-color:lightgrey;
-        font-family:Roboto;
+
     }
 
     .blue {
@@ -97,7 +101,10 @@
             <p id="testingParagraph">Testing paragraph</p>
             <p id="P1">Testing - only double click</p>
             <p id="P2">Testing - only edit button</p>
-
+            <p id="P3">Testing - remove button</p>
+            <p id="P4">Testing - dulicate button</p>
+            <p id="P5">Testing - default remove button</p>
+            <p id="P6">Testing - default dulicate button</p>
             <button id="removeEdit">Remove Edit Button</button>
             <button id="alertText">Alert text</button>
         </div>
@@ -164,6 +171,52 @@
                 editMode: "button"
 			});
 			
+			var paragraphEdit3 = $("#P3").omniEditable({
+			    okButtonText: "Go on",
+			    cancelButtonText: "Go back",
+			    buttonClass: "flatButton orange",
+			    textInputClass: "noBorder lightOrange",
+			    removeButton: {
+			        visible: true,
+			        text: "Delete me",
+			        cssClass: "flatButton blue"
+			    }
+			});
+
+			var paragraphEdit4 = $("#P4").omniEditable({
+			    okButtonText: "Go on",
+			    cancelButtonText: "Go back",
+			    buttonClass: "flatButton orange",
+			    textInputClass: "noBorder lightOrange",
+			    editMode: "doubleClick",
+			    duplicateButton: {
+			        visible: true,
+			        text: "Copy me",
+			        cssClass: "flatButton blue"
+			    }
+			});
+
+
+			var paragraphEdit5 = $("#P5").omniEditable({
+			    okButtonText: "Go on",
+			    cancelButtonText: "Go back",
+			    buttonClass: "flatButton orange",
+			    textInputClass: "noBorder lightOrange",
+			    removeButton: {
+			        visible: true
+			    }
+			});
+
+			var paragraphEdit6= $("#P6").omniEditable({
+			    okButtonText: "Go on",
+			    cancelButtonText: "Go back",
+			    buttonClass: "flatButton orange",
+			    textInputClass: "noBorder lightOrange",
+			    editMode: "doubleClick",
+			    duplicateButton: {
+			        visible: true			        
+			    }
+			});
 			$("#testOthersRemoveEdit").click(function () {
 			    items.removeEditButton();
 			});
