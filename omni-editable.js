@@ -2,111 +2,172 @@
 
     $.fn.omniEditable = function (options) {
 
-        // private variables
-        var EDIT_BTN_CLS = "editButton";
-        var OK_BTN_CLS = "okButton";
-        var CANCEL_BTN_CLS = "cancelButton";
+        /* Constants*/
+
         var EDITABLE_SPAN_CLS = "editableSpan";
         var TEXT_INPUT_CLS = "textInput";
         var EDIT_MODE_CLS = "editMode";
         var NORMAL_MODE_CLS = "normalMode";
+        
+        /* Enumeratons */
 
-        var EDIT_BTN_STYLE_CLS = "";
-        var EDIT_BTN_TEXT = "Edit";
-        var CANCEL_BTN_STYLE_CLS = "";
-        var CANCEL_BTN_TEXT = "Cancel";
-        var OK_BTN_STYLE_CLS = "";
-        var OK_BTN_TEXT = "OK";
-        var TEXT_INPUT_STYLE_CLS = "";
-        var EDIT_MODE = "buttonAndDoubleClick"; //button | 
-                                                //doubleClick | 
-                                                //buttonAndButtonClick
-        //BTN object properties: 
-                            //cssClass, 
-                            //internalClass, 
-                            //text,
-                            //visible
+        var modeEnum = {
+            NORMAL: 0,
+            EDIT:1
+        }
 
-        var DUPLICATE_BTN = {
-            cssClass:"",
-            internalClass: "duplicateButton",
-            text: "Duplicate",
-            visible:false
+        var editModeEnum = {
+            BUTTON: 0,
+            DOUBLE_CLICK: 1,
+            BUTTON_AND_DOUBLE_CLICK: 2
         };
 
-        var REMOVE_BTN = {
-            cssClass:"",
-            internalClass: "removeButton",
-            text: "Remove",
-            visible: false      
-        };
+        /* Object Constructors */
+
+        function Button(cssClass,
+                        internalClass,
+                        text,
+                        visible,
+                        onClick,
+                        mode) {
+            this.cssClass = cssClass;
+            this.internalClass = internalClass;
+            this.text = text;
+            this.visible = visible;
+            this.onClick = onClick;
+            this.mode = mode;
+            
+            this.create=function() {
+                if (this.visible) {
+                    
+                    console.log(this.text);
+                    console.log(this.cssClass);
+                   
+                    var classes = " " + this.internalClass + " "
+                            + this.cssClass + " "
+                            + ((this.mode===modeEnum.EDIT)?EDIT_MODE_CLS:NORMAL_MODE_CLS) + " ";
+                    console.log(classes);
+                    return $("<button></button>")
+                            .text(this.text)
+                            .attr("type", "button")
+                            .addClass(classes)
+                            .click(this.onClick);
+                } else {
+                    debugger
+                    return "";
+                }
+            };
+
+            this.initializeFromOptions=function(optionButton, generalButtonCls) {
+                if (optionButton !== undefined) {
+                    if (optionButton.visible!=undefined) 
+                        this.visible = optionButton.visible;
+
+                    if (optionButton.text != undefined) 
+                        this.text = optionButton.text;
+
+                    // If a general buttonClass options is given , then it 
+                    // is used for the buttons that the class is not specified.
+                    if (optionButton.cssClass != undefined) {
+                        this.cssClass = optionButton.cssClass;
+                    } else {
+                        this.cssClass = generalButtonCls;
+                    }
+                }
+            }
+        }
+
+        /* Private Variables */
+        var editBtn;
+        var okBtn;
+        var cancelBtn;
+        var duplicateBtn;
+        var removeBtn;
+
+        var textInputStyleCls = "";
+        
+        var editMode = editModeEnum.BUTTON_AND_DOUBLE_CLICK;
        
-        var internalOptions = [];
+       
 
+        var internalOptions = [];
+        
+        /* Private Methods*/
         function initializeOptions(options) {
+            var buttonClass = "";
+
             if (options != null) {
                 internalOptions = options;
             }
 
-            if (internalOptions.buttonClass !== undefined) {
-                EDIT_BTN_STYLE_CLS = internalOptions.buttonClass;
-                CANCEL_BTN_STYLE_CLS = internalOptions.buttonClass;
-                OK_BTN_STYLE_CLS = internalOptions.buttonClass;
-            } else {
-                if (internalOptions.editButtonClass !== undefined) {
-                    EDIT_BTN_STYLE_CLS = internalOptions.editButtonClass;
-                }
-
-                if (internalOptions.cancelButtonClass !== undefined) {
-                    CANCEL_BTN_STYLE_CLS = internalOptions.cancelButtonClass;
-                }
-
-                if (internalOptions.okButtonClass !== undefined) {
-                    OK_BTN_STYLE_CLS = internalOptions.okButtonClass;
-                }
-            }
-
             if (internalOptions.textInputClass !== undefined) {
-                TEXT_INPUT_STYLE_CLS = internalOptions.textInputClass;
-            }
-            
-            if (internalOptions.editButtonText !== undefined) {
-                EDIT_BTN_TEXT = internalOptions.editButtonText;
-            }
-
-            if (internalOptions.cancelButtonText !== undefined) {
-                CANCEL_BTN_TEXT = internalOptions.cancelButtonText;
-            }
-
-            if (internalOptions.okButtonText !== undefined) {
-                OK_BTN_TEXT = internalOptions.okButtonText;
+                textInputStyleCls = internalOptions.textInputClass;
             }
 
             if (internalOptions.editMode !== undefined) {
-                EDIT_MODE = internalOptions.editMode;
+                editMode = internalOptions.editMode;
             }
 
-            if (internalOptions.duplicateButton !== undefined) {
-                DUPLICATE_BTN.visible = internalOptions.duplicateButton.visible;
-                if (internalOptions.duplicateButton.text != undefined) {
-                    DUPLICATE_BTN.text = internalOptions.duplicateButton.text;
-                }
-                if (internalOptions.duplicateButton.cssClass != undefined) {
-                    DUPLICATE_BTN.cssClass = internalOptions.duplicateButton.cssClass;
-                }
-            }
-            
-            if (internalOptions.removeButton !== undefined) {
-                REMOVE_BTN.visible = internalOptions.removeButton.visible;
-                if (internalOptions.removeButton.text != undefined) {
-                    REMOVE_BTN.text = internalOptions.removeButton.text;
-                }
-                if (internalOptions.removeButton.cssClass != undefined) {
-                    REMOVE_BTN.cssClass = internalOptions.removeButton.cssClass;
-                }
-            }
+            if (internalOptions.buttonClass !== undefined)
+                buttonClass = internalOptions.buttonClass;
+
+            initializeButtons();
+            //debugger
+            editBtn.initializeFromOptions(
+                    internalOptions.editButton,
+                    buttonClass
+                );
+            okBtn.initializeFromOptions(
+                    internalOptions.okButton,
+                    buttonClass
+                );
+            cancelBtn.initializeFromOptions(
+                    internalOptions.cancelButton,
+                    buttonClass
+                );
+            duplicateBtn.initializeFromOptions(
+                    internalOptions.duplicateButton,
+                    buttonClass
+                );
+            removeBtn.initializeFromOptions(
+                    internalOptions.removeButton,
+                    buttonClass
+                );
         }
-        // private methods
+
+        function initializeButtons() {
+            editBtn = new Button("",
+                    "editButton",
+                    "Edit",
+                    true,
+                    startEdit,
+                    modeEnum.NORMAL);
+            okBtn = new Button("",
+                    "okButton",
+                    "OK",
+                    true,
+                    acceptEdit,
+                    modeEnum.EDIT);
+            cancelBtn = new Button("",
+                    "cancelButton",
+                    "Cancel",
+                    true,
+                    cancelEdit,
+                    modeEnum.EDIT);
+            duplicateBtn = new Button("",
+                    "duplicateButton",
+                    "Duplicate",
+                    false,
+                    duplicateEditable,
+                    modeEnum.NORMAL);
+            removeBtn = new Button("",
+                    "removeButton",
+                    "Remove",
+                    false,
+                    removeEditable,
+                    modeEnum.NORMAL);
+        }
+
         var startEdit = function (e) {
             var $parent = $(this).parent();
             var $editableSpan = $parent.find("." + EDITABLE_SPAN_CLS);
@@ -115,28 +176,17 @@
 				internalOptions.onStartEdit(e, $parent, $editableSpan.html());
 			}            
 
-            if (!e.isPropagationStopped()) {
-                var $cancelButton = $("<button>Cancel</button>")
-						.text(CANCEL_BTN_TEXT)
-						.attr("type", "button")
-						.click(cancelEdit)
-						.addClass(CANCEL_BTN_CLS + " " 
-                                + EDIT_MODE_CLS + " " 
-                                + CANCEL_BTN_STYLE_CLS)
-						.insertAfter($editableSpan);
-                var $okButton = $("<button></button>")
-						.text(OK_BTN_TEXT)
-						.attr("type", "button")
-						.addClass(OK_BTN_CLS + " "
-                        + EDIT_MODE_CLS + " "
-                        + OK_BTN_STYLE_CLS)
-						.click(acceptEdit)
-						.insertAfter($editableSpan);
+            if (!e.isPropagationStopped()) {    
+                var $cancelBtn = cancelBtn.create();
+                $cancelBtn.insertAfter($editableSpan);
+
+                okBtn.create().insertAfter($editableSpan);
+               
                 var $input = $("<input type = 'text'/>")
 						.attr("class", $parent.attr("class"))
 						.addClass(TEXT_INPUT_CLS + " "
                                 + EDIT_MODE_CLS + " "
-                                + TEXT_INPUT_STYLE_CLS)
+                                + textInputStyleCls)
 						.val($editableSpan.text())
 						.prop("defaultValue", $editableSpan.text())
 						.keyup(checkShortcuts)
@@ -225,7 +275,7 @@
 						    NORMAL_MODE_CLS
                         ].join(" "));
 
-            if (EDIT_MODE != "button") {
+            if (editMode != "button") {
                 $span.dblclick(startEdit);
             } else {
                 $span.css("cursor","default");
@@ -234,46 +284,13 @@
             return $span;
         }
 
-        function createEditButton() {
-            if (EDIT_MODE != "doubleClick") {
-                var classes = EDIT_BTN_CLS + " "
-                            + NORMAL_MODE_CLS + " "
-                            + EDIT_BTN_STYLE_CLS;
+        function editableToNormalMode($editable, spanHtml) {
 
-                return $("<button></button>")
-					    .text(EDIT_BTN_TEXT)
-					    .attr("type", "button")
-					    .addClass(classes)
-					    .click(startEdit);
-            } else {
-                return "";
-            }
-        }
-
-        function createExtraButton(button, onClickFunction) {
-            console.log(button.cssClass);
-            if (button.visible) {
-                var classes = button.internalClass + " "
-                            + button.cssClass + " "
-                            + NORMAL_MODE_CLS + " ";
-
-                return $("<button></button>")
-                        .text(button.text)
-                        .attr("type", "button")
-                        .addClass(classes)
-                        .click(onClickFunction);
-            } else {
-                return "";
-            }
-
-        }
-
-        function editableToNormalMode($editable, spanHtml) {           
             $editable.empty()
                     .append(createSpan($editable, spanHtml))
-            		.append(createEditButton($editable))
-                    .append(createExtraButton(REMOVE_BTN,removeEditable))
-                    .append(createExtraButton(DUPLICATE_BTN,duplicateEditable))
+            		.append(editBtn.create())
+                    .append(removeBtn.create())
+                    .append(duplicateBtn.create())
             		.find("." + EDIT_MODE_CLS)
             		.remove();
         }
