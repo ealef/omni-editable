@@ -1,50 +1,11 @@
-<style>
-	.red{
-		color:indianred;
-	}
-		
-	.pink {
-		color:white;
-        background-color:#ff00dc;
-	}
-
-    .green {
-		color:white;
-        background-color:#30c83c;
-	}
-
-    .greyBackground {
-        background-color:lightgrey;
-        font-family:Roboto;
-    }
-
-    .blue {
-        color:white;
-        background-color:#0094ff;          
-    }
-
-    .flatButton {
-        border:none;
-        margin-left:5px;
-        width:100px;
-        cursor:pointer;      
-    }
-
-    .lightBlue {
-        background-color:lightcyan;
-        border:none;
-    }
-</style>
-
 <html>
 	<head>
+        <title>omni-editable tester</title>
 		<script  type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 		<script  type="text/javascript" src="file:///c:/projects/omni-editable/omni-editable.js"></script>
 	</head>
 
-	<body>
-	
-		
+	<body>		
 			<!--<table>
 			
 			<tbody>
@@ -74,19 +35,65 @@
         <button id="testOthersRemoveEdit">Test Remove Button on Other Elements </button>-->
 
         <div id="testingParagraphDiv" class="greyBackground">
-            <p id="testingParagraph">Testing paragraph</p>
-
+            <p id="testingParagraph">Let's test!</p>
+            <p id="anotherTest">Let's test 2!</p>
             <button id="removeEdit">Remove Edit Button</button>
             <button id="alertText">Alert text</button>
         </div>
+
 	</body>
-
-
-	
-	
-	
-
 </html>
+
+<style>
+	.red{
+		color:indianred;
+	}
+		
+	.pink {
+		color:white;
+        background-color:#ff00dc;
+	}
+
+    .green {
+		color:white;
+        background-color:#30c83c;
+	}
+
+    .black {
+		color:white;
+        background-color:black;
+	}
+    .cyan {
+		color:white;
+        background-color:darkcyan;
+	}
+    .orange {
+		color:white;
+        background-color:orange;
+	}
+    .greyBackground {
+        background-color:lightgrey;
+        font-family:Roboto;
+    }
+
+    .blue {
+        color:white;
+        background-color:#0094ff;          
+    }
+
+    .flatButton {
+        border:none;
+        margin-left:5px;
+        width:100px;
+        cursor:pointer;      
+    }
+
+    .lightBlue {
+        background-color:lightcyan;
+        border:none;
+    }
+</style>
+
 <script type="text/javascript">
 
 	    $(document).ready(function () {
@@ -148,6 +155,30 @@
 			    },
                 buttonClass: "flatButton blue",
                 textInputClass: "lightBlue"
+			});
+
+			var paragraphEdit = $("#anotherTest").omniEditable({
+			    editButton: {
+			        text: "Change me"
+			    },
+			    okButton: {
+			        text: "Happy"
+			    },
+			    cancelButton: {
+			        text: "Unhappy"
+			    },
+			    duplicateButton: {
+			        text: "Make a twin",
+			        cssClass: "flatButton black",
+			        visible: true
+			    },
+			    removeButton: {
+			        text: "Make me go",
+			        cssClass: "flatButton cyan",
+			        visible: true
+			    },
+			    buttonClass: "flatButton orange",
+			    textInputClass: "lightBlue"
 			});
 
 			//var paragraphEdit = $("#testingParagraph").omniEditable({

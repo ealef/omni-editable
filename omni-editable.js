@@ -85,12 +85,11 @@
         var removeBtn;
 
         var textInputStyleCls = "";
-        
         var editMode = editModeEnum.BUTTON_AND_DOUBLE_CLICK;
-       
-       
-
         var internalOptions = [];
+        var parentId = "";
+        // Counting the douplications in order to make differend ids
+        var duplicationCounter = 0;
         
         /* Private Methods*/
         function initializeOptions(options) {
@@ -212,6 +211,13 @@
         };
 
         var duplicateEditable = function () {
+            duplicationCounter++;
+            var $parent = $(this).parent();           
+            var newId = parentId +  (duplicationCounter+1).toString();
+
+            $parent.clone(true, true)
+                    .attr("id", newId)
+                    .insertAfter($parent);
         };
 
         function exitEditMode(e, $clickedButton, keepChanges) {
@@ -318,6 +324,7 @@
 		this.each(function () {
 			var $editable = $(this);
 			var editableHtml = $editable.html();
+			parentId = $editable.attr("id");
 
             initializeOptions(options);
 			editableToNormalMode($editable, editableHtml);
